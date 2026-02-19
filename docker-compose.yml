@@ -1,0 +1,65 @@
+# docker-compose.yml (LAN Deployment)
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: school_db
+      POSTGRES_USER: school_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - school_net
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - school_net
+    restart: always
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://school_user:${DB_PASSWORD}@db/school_db
+      REDIS_URL: redis://redis:6379
+      SECRET_KEY: ${SECRET_KEY}
+      CLOUD_API_URL: ${CLOUD_API_URL}
+      SYNC_SECRET_TOKEN: ${SYNC_SECRET_TOKEN}
+    volumes:
+      - media_files:/app/media
+    depends_on:
+      - db
+      - redis
+    networks:
+      - school_net
+    restart: always
+
+  frontend:
+    build: ./frontend
+    networks:
+      - school_net
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - media_files:/media
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - school_net
+    restart: always
+
+volumes:
+  postgres_data:
+  media_files:
+
+networks:
+  school_net:

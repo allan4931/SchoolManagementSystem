@@ -1,0 +1,1 @@
+from app.schemas import student, teacher, fee, exam, attendance, library, transport, inventory, auth, class_, subject

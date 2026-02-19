@@ -1,0 +1,38 @@
+# Virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# SQLite (in case you use locally)
+*.sqlite3
+
+# Coverage / test reports
+.coverage
+htmlcov/
+*.cover
+*.py,cover
+.coverage.*
+
+# Migrations (if using Alembic)
+migrations/versions/
+
+# Node modules (if you ever have frontend in same repo)
+node_modules/
